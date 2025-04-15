@@ -1,10 +1,79 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Стильный To-Do List</title>
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <div class="background-image"></div>
+    <div class="overlay"></div>
 
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-check-double"></i> Мой Список Дел</h1>
+            <p class="subtitle">Организуй свой день эффективно</p>
+        </header>
+
+        <form action="/tasks/add_task" method="post" class="input-container">
+            <input type="text" name="task_text" id="task-input" placeholder="Что нужно сделать?" required>
+            <button type="submit" id="add-task-btn"><i class="fas fa-plus"></i></button>
+        </form>
+
+        <!-- Блок активных задач -->
+        <div class="tasks-section">
+            <div class="section-header" data-section="active-tasks">
+                <h2><i class="fas fa-list"></i> Активные задачи</h2>
+                <i class="fas fa-chevron-down toggle-icon"></i>
+            </div>
+            <ul id="active-tasks" class="task-list">
+                {% for task in active_tasks %}
+                <li class="task-item">
+                    <div class="task-content">
+                        <span class="task-text">{{ task.text }}</span>
+                        <div class="task-actions">
+                            <a href="/tasks/complete_task/{{ task.id }}" class="done-btn">
+                                <i class="fas fa-check"></i> Сделано
+                            </a>
+                            <a href="/tasks/delete_task/{{ task.id }}" class="delete-btn">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Блок завершенных задач -->
+        <div class="tasks-section">
+            <div class="section-header" data-section="completed-tasks">
+                <h2><i class="fas fa-check-circle"></i> Завершенные задачи</h2>
+                <i class="fas fa-chevron-down toggle-icon"></i>
+            </div>
+            <ul id="completed-tasks" class="task-list">
+                {% for task in completed_tasks %}
+                <li class="task-item completed">
+                    <div class="task-content">
+                        <span class="task-text">{{ task.text }}</span>
+                        <div class="task-actions">
+                            <a href="/tasks/delete_task/{{ task.id }}" class="delete-btn">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="stats">
+            <span id="tasks-left">{{ active_tasks|length }} {{ 'задача' if active_tasks|length == 1 else 'задачи' if 2 <= active_tasks|length <=4 else 'задач' }} осталось</span>
+        </div>
+    </div>
+
+    <script src="static/script.js"></script>
 </body>
 </html>
